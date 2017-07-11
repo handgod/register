@@ -19,7 +19,7 @@ public class RegisterServer {
     private static String url = "http://118.89.48.252:8080/repeater/control/RepeaterRegEvents";
 
     private static String imei;
-    private static String uniqueId;
+    private static String userId;
     public static String target = null;
 
     private RegisterServer() {
@@ -30,12 +30,12 @@ public class RegisterServer {
         if (args != null && args.length > 1) {
             if (args.length == 3) {
                 imei = args[0];
-                uniqueId = args[1];
+                userId = args[1];
                 target = args[2];
             }
         } else {
             imei = "1243sd4fqwe1476334q";
-            uniqueId = "1sf3qwe45134263q";
+            userId = "1sf3qwe45134263q";
             //          target = "42276";
         }
 
@@ -44,7 +44,7 @@ public class RegisterServer {
     }
     private static void init(){
         imei = "1234567890987665";
-        uniqueId = "123456";
+        userId = "123456";
         target = null;
     }
     public static boolean reg() {
@@ -56,8 +56,8 @@ public class RegisterServer {
             imei = "random_" + String.valueOf(new Random().nextInt());
         }*/
         Map<String,String> map = new HashMap<String,String>();
-        map.put("imei", imei);
-        map.put("uniqueId", uniqueId);
+        map.put("IMEI", imei);
+        map.put("USERID", userId);
         try {
             str = HttpClientUtils.post(new StringBuilder(url).toString(), map);
         } catch (Exception e) {
@@ -68,10 +68,13 @@ public class RegisterServer {
             return Boolean.FALSE;
         }
         WebResult result = JsonUtils.TO_OBJ(str, WebResult.class);
-        if (!result.isStatus()) {
+        //{"regInfo":{"IMEI":"1234567890987665","RepeaterIpAddress":"118.89.48.252","uniqueId":"123456"}}
+          if (!result.isStatus()) {
             return Boolean.FALSE;
         }
-        Constants.REG_INFO = JsonUtils.TO_OBJ(result.getResult(), RegistResponse.class);
+        str = result.getResult().toString();
+
+        Constants.REG_INFO = JsonUtils.TO_OBJ(str, RegistResponse.class);
         return Boolean.TRUE;
     }
 
