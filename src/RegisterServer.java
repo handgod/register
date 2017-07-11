@@ -72,9 +72,7 @@ public class RegisterServer {
           if (!result.isStatus()) {
             return Boolean.FALSE;
         }
-        str = result.getResult().toString();
-
-        Constants.REG_INFO = JsonUtils.TO_OBJ(str, RegistResponse.class);
+        Constants.REG_INFO = JsonUtils.TO_OBJ(result.getResult(), RegistResponse.class);
         return Boolean.TRUE;
     }
 
